@@ -1,3 +1,8 @@
 FROM alpine:latest
 
-CMD sh
+WORKDIR 	/home
+COPY 		srcs/	./srcs
+EXPOSE 		80 443
+RUN sh 		/home/srcs/setup.sh
+
+CMD cat
