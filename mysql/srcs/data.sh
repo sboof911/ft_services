@@ -1,0 +1,5 @@
+mysql -u root -e "CREATE DATABASE wordpress;"
+mysql -u root -e "CREATE USER 'sboof'@'localhost' IDENTIFIED BY 'root';"
+mysql -u root -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'sboof'@'localhost' WITH GRANT OPTION;"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress; use wordpress; source wordpress.sql;"
+mysql -u root -e "GRANT ALL ON wordpress.* TO 'user'@'localhost' IDENTIFIED BY 'password';"
