@@ -1,14 +1,13 @@
 minikube docker-env
 eval $(minikube -p minikube docker-env)
 
-# docker build -t nginx ./nginx/
-# docker build -t ftps ./ftps/
+docker build -t nginx ./nginx/
+docker build -t ftps ./ftps/
 docker build -t grafana ./Grafana/
-# docker build -t influxdb ./influxDB/
-# # docker build -t mysql ./mysql/
-# docker build -t phpmyadmin ./phpmyadmin/
-# docker build -t wordpress ./wordpress/
-# #docker run -d -p 3306:3306 mysql
+docker build -t influxdb ./influxDB/
+docker build -t mysql ./mysql/
+docker build -t phpmyadmin ./phpmyadmin/
+docker build -t wordpress ./wordpress/
 
 # Building metallb
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
