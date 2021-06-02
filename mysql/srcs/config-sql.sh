@@ -10,14 +10,12 @@ then
     echo "FLUSH PRIVILEGES;" |mysql -u root --skip-password
     echo "CREATE DATABASE wordpress;" |mysql -u root --skip-password 
     echo "CREATE USER 'sboof'@'%' IDENTIFIED BY 'root';" |mysql -u root --skip-password 
-    echo "GRANT ALL PRIVILEGES ON wordpress.* TO 'sboof'@'%';" |mysql -u root --skip-password 
-    echo "FLUSH PRIVILEGES;" |mysql -u root --skip-password && echo "CREATE DATABASE app_db;" |mysql -u root --skip-password 
-    echo "CREATE USER 'tele'@'localhost' IDENTIFIED BY 'tele';" |mysql -u root --skip-password 
-    echo "GRANT ALL PRIVILEGES ON *.* TO 'tele'@'localhost';" |mysql -u root --skip-password 
-    echo "FLUSH PRIVILEGES;" |mysql -u root --skip-password 
-    #mariadb < /home/phpmyadmin.sql -u root
-    #mariadb < /home/wordpress.sql -u root
+    echo "GRANT ALL PRIVILEGES ON wordpress.* TO 'sboof'@'%';" |mysql -u root --skip-password
+    echo "GRANT ALL PRIVILEGES ON phpmyadmin.* TO 'sboof'@'%';" |mysql -u root --skip-password
+    echo "FLUSH PRIVILEGES;" |mysql -u root --skip-password
+    mariadb < /home/phpmyadmin.sql -u root
+    mariadb < /home/wordpress.sql -u root
     /etc/init.d/mariadb stop
 fi
 
-/usr/bin/mysqld_safe --datadir='/var/lib/mysql'
+/usr/bin/supervisord -c /etc/supervisord.conf

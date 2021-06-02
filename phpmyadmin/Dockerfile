@@ -1,12 +1,14 @@
-FROM 	alpine:3.8
+FROM 	alpine:3.12
 
 WORKDIR /home
 
-COPY 	srcs/default.conf 	.
-COPY	srcs/setup.sh 		.
-COPY    srcs/config.inc.php .
+COPY 	srcs/default.conf 	    .
+COPY	srcs/setup.sh 		    .
+COPY    srcs/config.inc.php     .
+COPY    srcs/telegraf.conf      /home/
+COPY    srcs/supervisord.conf   /etc/
 #nginx installation
-RUN 	apk update
+RUN 	apk update && apk add --no-cache supervisor
 RUN 	apk add openrc nginx
 RUN 	openrc reboot
 RUN		rc-update add nginx default
@@ -26,7 +28,11 @@ RUN 	mkdir tmp
 RUN 	chmod 777 tmp
 RUN     mkdir -p /var/run/php
 RUN     cp config.inc.php /home/www/
+RUN     mkdir /home/www/tmp && chmod 777 /home/www/tmp
+#setup telegraf
+RUN         wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.2_linux_amd64.tar.gz
+RUN         tar xf telegraf-1.16.2_linux_amd64.tar.gz
 
 EXPOSE 	5000
 
-CMD	sh		/home/setup.sh
+CMD         /usr/bin/supervisord -c /etc/supervisord.conf

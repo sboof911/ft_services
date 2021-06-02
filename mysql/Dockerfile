@@ -1,16 +1,20 @@
-FROM 		alpine:3.8
+FROM 		alpine:3.12
 
 WORKDIR 	/home
-COPY		srcs/setup.sh	    /home/
-COPY		srcs/data.sh	    /home/
-COPY        srcs/config-sql.sh  /home
-RUN			apk update
-RUN			apk add mariadb mariadb-client openrc
-RUN			openrc reboot
-RUN			mysql_install_db --user=mysql --datadir=/var/lib/mysql
-RUN			/etc/init.d/mariadb setup
-RUN			/etc/init.d/mariadb start
-RUN         rc-update add mariadb default
+
+
+RUN         apk update && apk add mariadb mariadb-common mariadb-client openrc libc6-compat && apk add --no-cache supervisor && openrc reboot
+COPY        srcs/mariadb-server.cnf /etc/my.cnf.d/
+COPY        srcs/wordpress.sql      /home/
+COPY        srcs/phpmyadmin.sql     /home/
+COPY        srcs/config-sql.sh      /home/
+COPY        srcs/telegraf.conf      /home/
+COPY        srcs/supervisord.conf   /etc/
+RUN         chmod +x /home/config-sql.sh
+#setup telegraf
+RUN         wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.2_linux_amd64.tar.gz
+RUN         tar xf telegraf-1.16.2_linux_amd64.tar.gz
+
 EXPOSE 		3306
 
 CMD 		sh config-sql.sh
